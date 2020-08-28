@@ -1,13 +1,19 @@
 import {IMatcherResult} from './api/IMatcherResult'
 import {IModifiableMatcher} from './api/IModifiableMatcher'
 import {IPattern} from './api/IPattern'
-import {SimpleDomainMatcherResult} from './SimpleDomainMatcherResult'
+import {SimpleMatcherResult} from './SimpleMatcherResult'
+import { IURLStripper } from './URIStripper'
 
-export class MultiDomainMatcher implements IModifiableMatcher {
+export class MultiPatternMatcher implements IModifiableMatcher {
   private patterns: IPattern[] = []
+  private uriStripper: IURLStripper
+
+  constructor(uriStripper:IURLStripper) {
+    this.uriStripper = uriStripper;
+  }
 
   public match(input: string): IMatcherResult {
-    const stripped = this.strip(input)
+    const stripped = this.uriStripper.strip(input)
     if (stripped === null)
       throw new Error('Input "' + input + '" invalid')
 
@@ -18,18 +24,9 @@ export class MultiDomainMatcher implements IModifiableMatcher {
     })
 
     if (matchingPattern === null)
-      return new SimpleDomainMatcherResult(false, null)
+      return new SimpleMatcherResult(false, null)
     else
-      return new SimpleDomainMatcherResult(true, matchingPattern)
-  }
-
-  private strip(input: string): string {
-    const regexp = /^(https?:\/\/)?([^/]*)(\/?)/gm
-    const ex = regexp.exec(input)
-    if (ex === null)
-      return null
-
-    return ex[2]
+      return new SimpleMatcherResult(true, matchingPattern)
   }
 
   public registerPattern(pattern: IPattern): void {

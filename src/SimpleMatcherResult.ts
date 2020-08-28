@@ -1,7 +1,7 @@
 import {IMatcherResult} from './api/IMatcherResult'
 import {IPattern} from './api/IPattern'
 
-export class SimpleDomainMatcherResult implements IMatcherResult {
+export class SimpleMatcherResult implements IMatcherResult {
   private readonly _matches: boolean
   private readonly _pattern: IPattern
 

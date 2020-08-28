@@ -1,10 +1,11 @@
 import {expect} from 'chai'
-import {MultiDomainMatcher} from '../src/MultiDomainMatcher'
+import {MultiPatternMatcher} from '../src/MultiPatternMatcher'
 import {SimpleDomainPattern} from '../src/SimpleDomainPattern'
+import { DomainStripper } from '../src/URIStripper'
 
 describe('MultiDomainMatcher.ts', () => {
   it('should match through multiple patterns', () => {
-    const matcher = new MultiDomainMatcher()
+    const matcher = new MultiPatternMatcher(new DomainStripper())
 
     const pattern01 = new SimpleDomainPattern('*.auritylab.com')
     const pattern02 = new SimpleDomainPattern('*.test.com')
@@ -22,7 +23,7 @@ describe('MultiDomainMatcher.ts', () => {
   })
 
   it ('should match single pattern', () => {
-    const matcher = new MultiDomainMatcher()
+    const matcher = new MultiPatternMatcher(new DomainStripper())
 
     const pattern = new SimpleDomainPattern('*.auritylab.com')
     matcher.registerPattern(pattern)
@@ -33,7 +34,7 @@ describe('MultiDomainMatcher.ts', () => {
   })
 
   it ('should accept full url input', () => {
-    const matcher = new MultiDomainMatcher()
+    const matcher = new MultiPatternMatcher(new DomainStripper())
     matcher.registerPattern(new SimpleDomainPattern('*.auritylab.com'))
 
     const result = matcher.match('https://www.auritylab.com')
